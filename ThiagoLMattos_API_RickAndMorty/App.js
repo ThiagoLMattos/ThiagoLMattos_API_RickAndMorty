@@ -28,15 +28,13 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="CharacterList">
-          <Stack.Screen 
-            name="CharacterList" 
+          <Stack.Screen
+            name="CharacterList"
             component={CharacterListScreen}
-            options={{ title: 'Rick and Morty Characters' }}
           />
-          <Stack.Screen 
-            name="CharacterDetails" 
+          <Stack.Screen
+            name="CharacterDetails"
             component={CharacterDetailsScreen}
-            options={{ title: 'Character Details' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
