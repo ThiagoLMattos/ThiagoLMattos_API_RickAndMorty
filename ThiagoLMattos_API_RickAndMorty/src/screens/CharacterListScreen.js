@@ -227,7 +227,7 @@ const CharacterList = ({ navigation }) => {
     return (
       <View style={styles.loadingContainer}>
         <View style={styles.portalLoader}>
-          <ActivityIndicator size="large" color={COLORS.primary} /> {/* MINHA tela de loading se tiver demorando pra carregar */}
+          <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
         <Text style={styles.loadingText}>Carregando personagens...</Text>
         <Text style={styles.loadingSubtext}>Abrindo portal interdimensional 🌀</Text>

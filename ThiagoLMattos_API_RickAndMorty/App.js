@@ -27,7 +27,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="CharacterList">
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="CharacterList">
           <Stack.Screen
             name="CharacterList"
             component={CharacterListScreen}
