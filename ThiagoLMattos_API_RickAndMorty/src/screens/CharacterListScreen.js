@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 // variaveis pra deixar o codigo mais facil (eu fiquei mt confuso fazendo)
-const API_URL = 'https://rickandmortyapi.com/api/character'; 
+const API_URL = 'https://rickandmortyapi.com/api/character';
 
 // Cores do tema Rick and Morty 🎨
 const COLORS = {
@@ -62,6 +62,7 @@ const CharacterList = ({ navigation }) => {
   const [page, setPage] = useState(1); // página atual
   const [hasMore, setHasMore] = useState(true); // tem mais personagens pra carregar?
   const [loadingMore, setLoadingMore] = useState(false); // carregando mais personagens?
+  const [searchQuery, setSearchQuery] = useState('');
 
   // eu inicio a função assim que carregar a tela (a função ta embaixo)
   useEffect(() => {
@@ -76,23 +77,23 @@ const CharacterList = ({ navigation }) => {
       } else {
         setLoadingMore(true);
       }
-      
-      const url = query 
+
+      const url = query
         ? `${API_URL}/?name=${query}&page=${pageNum}`
         : `${API_URL}/?page=${pageNum}`;
-      
+
       const response = await fetch(url); // chama a api
       const data = await response.json(); // chama os dados
-      
+
       if (pageNum === 1) {
         setCharacters(data.results || []); // primeira página, substitui tudo
       } else {
         setCharacters(prev => [...prev, ...(data.results || [])]); // adiciona mais personagens
       }
-      
+
       // verifica se tem mais páginas
       setHasMore(!!data.info?.next);
-      
+
     } catch (error) {
       console.error('Error fetching characters:', error); // se der erro (não vai) avisa
       if (pageNum === 1) {
@@ -119,6 +120,27 @@ const CharacterList = ({ navigation }) => {
       setPage(nextPage);
       fetchCharacters('', nextPage);
     }
+  };
+
+  // lidar com a busca
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    setPage(1);
+    setHasMore(true);
+
+    if (text.trim() === '') {
+      fetchCharacters('', 1);
+    } else {
+      fetchCharacters(text, 1);
+    }
+  };
+
+  // limpar a busca
+  const clearSearch = () => {
+    setSearchQuery('');
+    setPage(1);
+    setHasMore(true);
+    fetchCharacters('', 1);
   };
 
   // traduzir o status pro português
@@ -170,25 +192,25 @@ const CharacterList = ({ navigation }) => {
     >
       {/* Container da imagem com o ponto de status */}
       <View style={styles.imageContainer}>
-        <Image 
+        <Image
           source={{ uri: item.image }}  // pega a imagem
-          style={styles.characterImage} 
+          style={styles.characterImage}
         />
         {/* Bolinha colorida indicando o status */}
         <View style={[styles.statusDot, { backgroundColor: getStatusColor(item.status) }]} />
       </View>
-      
+
       <View style={styles.characterInfo}>
         <Text style={styles.characterName} numberOfLines={1}>
           {item.name || 'Desconhecido'}
         </Text>
-        
+
         {/* Linha da espécie */}
         <View style={styles.infoRow}>
           <Text style={styles.label}>Espécie:</Text>
           <Text style={styles.characterSpecies}>{translateSpecies(item.species)}</Text>
         </View>
-        
+
         {/* Linha do status */}
         <View style={styles.infoRow}>
           <Text style={styles.label}>Status:</Text>
@@ -214,7 +236,7 @@ const CharacterList = ({ navigation }) => {
   // footer da lista (loading mais personagens)
   const renderFooter = () => {
     if (!loadingMore) return null;
-    
+
     return (
       <View style={styles.footerLoader}>
         <ActivityIndicator size="small" color={COLORS.primary} />
@@ -230,14 +252,13 @@ const CharacterList = ({ navigation }) => {
           <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
         <Text style={styles.loadingText}>Carregando personagens...</Text>
-        <Text style={styles.loadingSubtext}>Abrindo portal interdimensional 🌀</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      {/* Flash de portal quando clica */}
+      {/* flash de portal quando clica */}
       <Animated.View
         style={[
           styles.portalFlash,
@@ -248,17 +269,53 @@ const CharacterList = ({ navigation }) => {
         pointerEvents="none"
       />
 
-      {/* Efeito de portal no fundo */}
+      {/* efeito de portal no fundo */}
       <View style={styles.portalBackground}>
         <View style={styles.portalCircle1} />
         <View style={styles.portalCircle2} />
         <View style={styles.portalCircle3} />
       </View>
 
-      {/* Header com título */}
+      {/* header com título */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Rick and Morty</Text>
-        <Text style={styles.headerSubtitle}>Multiverso de Personagens</Text>
+
+        {/* barra de pesquisa */}
+        <View style={styles.searchContainer}>
+          <Text style={styles.searchIcon}>🔍</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Buscar personagens..."
+            placeholderTextColor={COLORS.textSecondary}
+            value={searchQuery}
+            onChangeText={handleSearch}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+              <Text style={styles.clearIcon}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* barra de status */}
+        <View style={styles.statsBar}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>{characters.length}</Text>
+            <Text style={styles.statLabel}>Personagens</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>826+</Text>
+            <Text style={styles.statLabel}>Total</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>∞</Text>
+            <Text style={styles.statLabel}>Dimensões</Text>
+          </View>
+        </View>
       </View>
 
       {/* lista dos personagens */}
@@ -276,7 +333,6 @@ const CharacterList = ({ navigation }) => {
         ListFooterComponent={renderFooter} // mostra o loading no final
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyEmoji}>🛸</Text>
             <Text style={styles.emptyText}>
               Nenhum personagem encontrado
             </Text>
@@ -286,7 +342,7 @@ const CharacterList = ({ navigation }) => {
           </View>
         }
       />
-    </View>
+    </View >
   );
 };
 
@@ -356,12 +412,62 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.primary,
     textAlign: 'center',
+    marginBottom: 10,
   },
-  headerSubtitle: {
-    fontSize: 14,
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    marginBottom: 15,
+  },
+  searchIcon: {
+    fontSize: 18,
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    padding: 12,
+    fontSize: 16,
+    color: COLORS.text,
+  },
+  clearButton: {
+    padding: 5,
+  },
+  clearIcon: {
+    fontSize: 20,
     color: COLORS.textSecondary,
-    textAlign: 'center',
-    marginTop: 5,
+    fontWeight: 'bold',
+  },
+  statsBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    backgroundColor: COLORS.background,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  statLabel: {
+    fontSize: 10,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+  },
+  statDivider: {
+    width: 1,
+    backgroundColor: COLORS.primary,
+    opacity: 0.3,
   },
   loadingContainer: {
     flex: 1,
@@ -373,7 +479,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.text,
     opacity: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
@@ -482,10 +588,6 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     paddingVertical: 50,
-  },
-  emptyEmoji: {
-    fontSize: 60,
-    marginBottom: 15,
   },
   emptyText: {
     fontSize: 18,
