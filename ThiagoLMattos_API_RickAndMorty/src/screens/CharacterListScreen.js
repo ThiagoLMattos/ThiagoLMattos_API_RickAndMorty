@@ -186,7 +186,7 @@ const CharacterList = ({ navigation }) => {
   // funçao pra carregar o personagem
   const renderCharacterItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.characterCard}
+      style={[styles.characterCard, {borderColor: getStatusColor(item.status)}]}
       onPress={() => handleCharacterPress(item)} // isso daq faz ficar escurinho quando segura
       activeOpacity={0.8}
     >
@@ -194,7 +194,7 @@ const CharacterList = ({ navigation }) => {
       <View style={styles.imageContainer}>
         <Image
           source={{ uri: item.image }}  // pega a imagem
-          style={styles.characterImage}
+          style={[styles.characterImage, {borderColor: getStatusColor(item.status)}]}
         />
         {/* Bolinha colorida indicando o status */}
         <View style={[styles.statusDot, { backgroundColor: getStatusColor(item.status) }]} />
@@ -228,7 +228,7 @@ const CharacterList = ({ navigation }) => {
 
       {/* Setinha pra mostrar que é clicável */}
       <View style={styles.arrowContainer}>
-        <Text style={styles.arrow}>›</Text>
+        <Text style={[styles.arrow, {color: getStatusColor(item.status)}]}>›</Text>
       </View>
     </TouchableOpacity>
   );

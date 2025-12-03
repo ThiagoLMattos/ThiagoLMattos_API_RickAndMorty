@@ -127,11 +127,6 @@ const LoadingScreen = ({ onFinish }) => {
                             inputRange: [0, 1],
                             outputRange: [`${baseAngle}deg`, `${baseAngle + 360}deg`],
                         });
-                        // rotação inversa para manter a letra na posição correta
-                        const inverse = textRotate.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [`-${baseAngle}deg`, `-${baseAngle + 360}deg`],
-                        });
 
                         // coloração das letras pelo índice
                         const color =
@@ -149,7 +144,6 @@ const LoadingScreen = ({ onFinish }) => {
                                         transform: [
                                             { rotate },              // rotaciona a letra em volta do centro
                                             { translateY: -radius }, // afasta a letra do centro
-                                            { rotate: inverse },     // rotaciona a letra de volta para ficar legível
                                         ],
                                     },
                                 ]}

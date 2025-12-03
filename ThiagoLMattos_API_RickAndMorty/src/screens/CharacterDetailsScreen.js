@@ -171,16 +171,16 @@ const CharacterDetailsScreen = ({ route, navigation }) => {
 
       {/* botao de voltar */}
       <TouchableOpacity
-        style={styles.backButton}
+        style={[styles.backButton, {borderColor: getBackgroundTint(character.status)}]}
         onPress={handleBackPress}
         activeOpacity={0.8}
       >
-        <Text style={styles.backButtonText}>‹ Voltar</Text>
+        <Text style={[styles.backButtonText, {color: getBackgroundTint(character.status)}]}>‹ Voltar</Text>
       </TouchableOpacity>
 
       {/* imagem do personagem */}
       <View style={styles.imageContainer}>
-        <Image source={{ uri: character.image }} style={styles.image} />
+        <Image source={{ uri: character.image }} style={[styles.image, {borderColor: getBackgroundTint(character.status)}]} />
         <View style={[styles.statusDot, { backgroundColor: getStatusColor(character.status) }]} />
       </View>
 
@@ -204,8 +204,8 @@ const CharacterDetailsScreen = ({ route, navigation }) => {
         </View>
 
         {/* INFORMAÇÃO */}
-        <View style={styles.infoCard}>
-          <Text style={styles.cardTitle}>📋 Informações Básicas</Text>
+        <View style={[styles.infoCard, {borderColor: getBackgroundTint(character.status)}]}>
+          <Text style={[styles.cardTitle, {color: getBackgroundTint(character.status)}]}>📋 Informações Básicas</Text>
 
         {/*especie*/}
           <View style={styles.infoRow}>
@@ -221,8 +221,8 @@ const CharacterDetailsScreen = ({ route, navigation }) => {
         </View>
 
         {/* LOCALIZAÇÃO */}
-        <View style={styles.infoCard}>
-          <Text style={styles.cardTitle}>🌍 Localização</Text>
+        <View style={[styles.infoCard, {borderColor: getBackgroundTint(character.status)}]}>
+          <Text style={[styles.cardTitle, {color: getBackgroundTint(character.status)}]}>🌍 Localização</Text>
 
         {/* origem*/}
           <View style={styles.infoRow}>
@@ -242,12 +242,12 @@ const CharacterDetailsScreen = ({ route, navigation }) => {
         </View>
 
         {/* EPISÓDIOS */}
-        <View style={styles.infoCard}>
-          <Text style={styles.cardTitle}>📺 Aparições</Text>
+        <View style={[styles.infoCard, {borderColor: getBackgroundTint(character.status)}]}>
+          <Text style={[styles.cardTitle, {color: getBackgroundTint(character.status)}]}>📺 Aparições</Text>
 
           <View style={styles.episodeContainer}>
-            <Text style={styles.episodeNumber}>{character.episode.length}</Text>
-            <Text style={styles.episodeText}>
+            <Text style={[styles.episodeNumber, {color: getBackgroundTint(character.status)}]}>{character.episode.length}</Text>
+            <Text style={[styles.episodeText, {color: getBackgroundTint(character.status)}]}>
               de {TOTAL_EPISODES} {character.episode.length === 1 ? 'episódio' : 'episódios'}
             </Text>
           </View>
@@ -257,7 +257,8 @@ const CharacterDetailsScreen = ({ route, navigation }) => {
             <View
               style={[
                 styles.progressBarFill,
-                { width: `${(character.episode.length / TOTAL_EPISODES) * 100}%` }
+                { width: `${(character.episode.length / TOTAL_EPISODES) * 100}%` },
+                { backgroundColor: getBackgroundTint(character.status)}
               ]}
             />
           </View>
@@ -271,7 +272,7 @@ const CharacterDetailsScreen = ({ route, navigation }) => {
             onPress={() => setEpisodesExpanded(!episodesExpanded)}
             activeOpacity={0.7}
           >
-            <Text style={styles.expandButtonText}>
+            <Text style={[styles.expandButtonText, {color: getBackgroundTint(character.status)}]}>
               {episodesExpanded ? '▲ Esconder episódios' : '▼ Ver todos os episódios'}
             </Text>
           </TouchableOpacity>
